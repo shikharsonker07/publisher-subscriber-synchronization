@@ -14,7 +14,7 @@ public class InMemoryBuffer {
 
     public synchronized void readData() throws InterruptedException {
         String name = Thread.currentThread().getName();
-        if (dataQueue.isEmpty()) {
+        while (dataQueue.isEmpty()) {
             System.out.println("Queue Empty!! " + name + " waiting for new message...");
             wait();
         }
@@ -27,8 +27,10 @@ public class InMemoryBuffer {
 
     public synchronized void publishData(String message) throws InterruptedException {
         String name = Thread.currentThread().getName();
-        if (dataQueue.size() == capacity) {
+        System.out.println(name + " acquired the lock");
+        while (dataQueue.size() >= capacity) {
             System.out.println("Queue Full!! " + name + " waiting for message to be consumed...");
+            System.out.println(name + " state is now waiting and released the lock...");
             wait();
         }
         dataQueue.add(message);
