@@ -2,8 +2,10 @@ package org.example;
 
 public class Main {
     public static void main(String[] args) {
-        for (int i = 1; i <= 5; i++) {
-            System.out.println("i = " + i);
-        }
+        InMemoryBuffer inMemoryBuffer = new InMemoryBuffer(4);
+        Thread producer = new Thread(new Producer(inMemoryBuffer), "producer");
+        Thread consumer = new Thread(new Consumer(inMemoryBuffer), "consumer");
+        consumer.start();
+        producer.start();
     }
 }
